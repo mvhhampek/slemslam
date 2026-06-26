@@ -13,11 +13,31 @@ find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
 # find_package(<dependency> REQUIRED)
 
 
 add_executable(lidar_merger src/lidar_merger.cpp)
-ament_target_dependencies(lidar_merger rclcpp std_msgs sensor_msgs tf2 tf2_ros tf2_geometry_msgs geometry_msgs)
+ament_target_dependencies(lidar_merger
+  rclcpp
+  std_msgs
+  sensor_msgs
+  tf2
+  tf2_ros
+  tf2_geometry_msgs
+  geometry_msgs
+)
+
+
+add_executable(odom_corruptor src/odom_corruptor.cpp)
+ament_target_dependencies(odom_corruptor 
+  rclcpp 
+  nav_msgs 
+  geometry_msgs 
+  tf2 
+  tf2_ros 
+  tf2_geometry_msgs
+)
 
 install(DIRECTORY
   config
@@ -27,6 +47,7 @@ install(DIRECTORY
 
 install(TARGETS
   lidar_merger
+  odom_corruptor
   DESTINATION lib/${PROJECT_NAME}
 )
 
