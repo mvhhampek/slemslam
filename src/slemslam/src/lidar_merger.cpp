@@ -17,8 +17,10 @@ public:
     tf_buffer_ = std::make_unique<tf2_ros::Buffer>(this->get_clock());
     tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
 
-    merged_pub_ =
-        this->create_publisher<sensor_msgs::msg::LaserScan>("/scan", 10);
+    // merged_pub_ =
+    //     this->create_publisher<sensor_msgs::msg::LaserScan>("/scan", 10);
+    merged_pub_gt_ = this->create_publisher<sensor_msgs::msg::LaserScan>("/scan_gt", 10);
+    merged_pub_drifting_ = this->create_publisher<sensor_msgs::msg::LaserScan>("/scan_drifting", 10);
 
     rmw_qos_profile_t qos_profile = rmw_qos_profile_sensor_data;
     auto qos = rclcpp::QoS(rclcpp::QoSInitialization(qos_profile.history, 10),
@@ -61,7 +63,10 @@ private:
     process_scan(front_msg, merged_scan);
     process_scan(rear_msg, merged_scan);
 
-    merged_pub_->publish(merged_scan);
+    merged_pub_gt_->publish(merged_scan);
+
+    merged_scan.header.frame_id = "noisy_base_link";
+    merged_pub_drifting_->publish(merged_scan);
   }
 
   void
@@ -116,7 +121,8 @@ private:
 
   std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
   std::shared_ptr<tf2_ros::TransformListener> tf_listener_;
-  rclcpp::Publisher<sensor_msgs::msg::LaserScan>::SharedPtr merged_pub_;
+  rclcpp::Publisher<sensor_msgs::msg::LaserScan>::SharedPtr merged_pub_gt_;
+  rclcpp::Publisher<sensor_msgs::msg::LaserScan>::SharedPtr merged_pub_drifting_;
 };
 
 int main(int argc, char *argv[]) {
