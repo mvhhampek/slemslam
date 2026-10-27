@@ -1,6 +1,6 @@
 # slemslam
 
-A ROS 2 package for real-time 3D Semantic SLAM using YOLOv8, ONNX Runtime, and GTSAM (iSAM2) factor graph optimization.
+A ROS 2 package for 3D Semantic SLAM using YOLOv8, ONNX Runtime, and GTSAM (iSAM2) factor graph optimization.
 
 ---
 
